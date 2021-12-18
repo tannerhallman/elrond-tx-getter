@@ -7,18 +7,15 @@ var pageBuffer = 5;
 
 // change this or run "node elrond-scanner.js 350"
 var pageDefault = 350;
-var blockchainExplorerPages = process.argv.slice(0)[2] || pageDefault;
-
-console.log("Pulling " + blockchainExplorerPages + " pages of txs...");
+var blockchainExplorerPages = parseInt(process.argv.slice(0)[2]) || pageDefault;
 
 var pages = blockchainExplorerPages + pageBuffer;
+console.log("Pulling " + pages + " pages of txs...");
 
 var totalItems = pages * 25;
 
 var txs = [];
 const queue = [];
-
-const expandedTxs = [];
 
 // wrap a request in an promise
 function fetchWalletTx(page) {
