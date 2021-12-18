@@ -10,7 +10,7 @@ var pageDefault = 350;
 var blockchainExplorerPages = parseInt(process.argv.slice(0)[2]) || pageDefault;
 
 var pages = blockchainExplorerPages + pageBuffer;
-console.log("Pulling " + pages + " pages of txs...");
+console.log("Pulling " + pages + " pages (added a buffer of 5) of txs...");
 
 var totalItems = pages * 25;
 
