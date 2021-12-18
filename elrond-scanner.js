@@ -1,11 +1,17 @@
 var https = require("https");
 var fs = require("fs");
 var querystring = require("querystring");
+const { Console } = require("console");
 
 var pageBuffer = 5;
 
-// change this
-var pages = 352 + pageBuffer;
+// change this or run "node elrond-scanner.js 350"
+var pageDefault = 350;
+var blockchainExplorerPages = process.argv.slice(0)[2] || pageDefault;
+
+console.log("Pulling " + blockchainExplorerPages + " pages of txs...");
+
+var pages = blockchainExplorerPages + pageBuffer;
 
 var totalItems = pages * 25;
 
@@ -59,39 +65,6 @@ function fetchWalletTx(page) {
       });
   });
 }
-// wrap a request in an promise
-function fetchTxThick(txHash) {
-  var options = {
-    hostname: "api.elrond.com",
-    path: `/transactions/${txHash}`,
-    method: "GET",
-  };
-
-  return new Promise((resolve, reject) => {
-    https
-      .get(options, (resp) => {
-        console.log("fetcing " + JSON.stringify(options));
-        let data = "";
-
-        // A chunk of data has been received.
-        resp.on("data", (chunk) => {
-          data += chunk;
-        });
-
-        // The whole response has been received. Print out the result.
-        resp.on("end", () => {
-          JSON.parse(data).forEach((item) => {
-            expandedTxs.push(item);
-          });
-          resolve();
-        });
-      })
-      .on("error", (err) => {
-        reject(err);
-        console.log("Error: " + err.message);
-      });
-  });
-}
 
 // now to program the "usual" way
 // all you need to do is use async functions and await
@@ -119,20 +92,9 @@ async function myBackEndLogic() {
     }
   });
 
-  try {
-    for (let index = 0; index < txs.length; index++) {
-      const tranny = txs[index];
-      await fetchTxThick(tranny.txHash);
-      console.log("fetching a single tx");
-    }
-  } catch (error) {
-    console.error("ERROR:");
-    console.error(error);
-  }
+  // write to
 
-  // write to file
-
-  var jsonContent = JSON.stringify(expandedTxs);
+  var jsonContent = JSON.stringify(txs);
 
   fs.writeFile("./output.json", jsonContent, "utf8", function (err) {
     if (err) {
