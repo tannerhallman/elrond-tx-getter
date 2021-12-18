@@ -52,10 +52,12 @@ function fetchWalletTx(page) {
 
         // The whole response has been received. Print out the result.
         resp.on("end", () => {
-          JSON.parse(data).forEach((item) => {
-            queue.push(item);
-            params.from += page;
-          });
+          try {
+            JSON.parse(data).forEach((item) => {
+              queue.push(item);
+              params.from += page;
+            });
+          } catch {}
           resolve();
         });
       })
