@@ -79,7 +79,7 @@ async function myBackEndLogic() {
     let found = false;
 
     txs.forEach((trans) => {
-      if (item.txHash === trans.txHash) found = true;
+      if (item.identifier === trans.identifier) found = true;
     });
 
     if (!found) {
