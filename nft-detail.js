@@ -17,9 +17,22 @@ var totalItems = pages * pageSize;
 
 var nfts = [];
 
+function decimalToHex(d, padding) {
+  var hex = Number(d).toString(16);
+  padding =
+    typeof padding === "undefined" || padding === null
+      ? (padding = 2)
+      : padding;
+
+  while (hex.length < padding) {
+    hex = "0" + hex;
+  }
+
+  return hex;
+}
+
 function formatParams(numberr) {
-  const numString =
-    numberr.toString(16).length == 1 ? "0" + numberr.toString(16) : numberr;
+  const numString = decimalToHex(numberr, 2);
   var options = {
     hostname: "api.elrond.com",
     path: "/nfts/MANY-39af2c-" + numString,
